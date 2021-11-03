@@ -16,9 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls.conf import re_path
+
 from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path(r'^hello/(\d{1,2})/$',views.hello)
+    re_path(r'^hello/(\d{1,2})/$',views.hello),
+    path('time/',views.current_datetime)
 ]
