@@ -1,0 +1,126 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+body{
+    background-color: #4158D0;
+    background-image: linear-gradient(135deg, #4158D0 0%, #C850C0 31%, #FFCC70 84%);
+    background-attachment: fixed;
+}
+.header{
+    display: grid;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+.header h1{
+    color: white;
+    font-weight: bold;
+    margin-top: 20px;
+    font-size: 40px;
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    vertical-align: middle;
+}
+.row{
+    display: grid;
+    grid-template-columns: 250px;
+    flex-wrap: wrap;
+    height: 80vh;
+    vertical-align: middle;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+.row form:not(.followTag,.labelFollowTag){
+    border: 2px solid white;
+    border-right: none;
+    border-left: none;
+    border-top-width: 4px;
+    padding: 20px;
+    border-radius: 25.6px;
+    display: grid;
+    grid-template-columns: 220px;
+    flex-wrap: wrap;
+    vertical-align: middle;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+.row form input{
+    text-align: center;
+    font-size: 17px;
+}
+.row form input[type=text],.row form input[type=password]{
+    border: none;
+    height: 30px;
+    border-radius: 3.2px;
+    margin-top: 5px;
+}
+.row form input[type=submit]{
+    height: 35px;
+    font-size: 18px;
+    border-radius: 3.2px;
+    border: none;
+    background-color: rgba(var(--d69,0,149,246),.7);
+    color: white;
+    font-weight: bold;
+    transition: 5ms;
+}
+.row form input[type=submit]:hover{
+    background-color: grey;
+    transition: 5ms;
+}
+.row form select{
+    text-align: center;
+    margin-top: 10px;
+    height: 30px;
+    font-size: 14px;
+    border-radius: 5.6px;
+    background-color: white;
+    color: rgba(var(--d69,0,149,246),.7);
+    font-weight: bold;
+    border: none;
+}
+.addHashtags,.addUserID{
+    border: none;
+    margin-top: 10px;
+    border-radius: 5.6px;
+    height: 200px;
+    text-align: center;
+    font-size: 13px;
+    width: 218px;
+    max-width: 218px;
+}
+.mainDivTagsCheckBoxs{
+    text-align: right;
+    display: grid;
+    justify-content: center;
+    vertical-align: middle;
+    
+    grid-template-columns: repeat(auto-fit,minmax(40px,1fr));
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.followTag,.likeTag{
+    width: 25px;
+    
+    height: 18px;
+    
+}
+.labelFollowTag,.labelLikeTag{
+    height: 20px;
+    z-index: 1;
+}
+.countLikeOrFollow{
+    width: 55px;
+    grid-column-end: none;
+    font-size: 14px !important;
+    font-weight: lighter !important;
+}
+.footer{
+    text-align: center;
+}
