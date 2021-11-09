@@ -1,4 +1,8 @@
 window.addEventListener('load',function(){
+
+     
+
+
     const selectOption = document.getElementById('select');
     selectOption.addEventListener('click',function(){
         const hashtags = document.querySelector('.mainDivTagsCheckBoxs');

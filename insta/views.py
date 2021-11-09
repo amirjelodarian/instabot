@@ -1,3 +1,4 @@
+from os import remove
 import re
 from typing import Match
 from django.shortcuts import render
@@ -29,8 +30,15 @@ def validate(request):
 
         if request.POST['selectOption'] == 'likeOrFollowAsHashtags':
             likeOrFollowAsHashtagsValidate(request)
+            if(not messages):
+                validateHashtags(request)
+                # do hashtags validate
+                messages.append('do hashtags validate')
         elif request.POST['selectOption'] == 'followSuggestionPeople':
             followSuggestionPeopleValidate(request)
+            if(not messages):
+                # do follow suggestion validate
+                messages.append('do follow suggestion validate')
         else:
             messages.append("Don't change select option value !")
     else:
@@ -75,4 +83,28 @@ def countValidate(request,countElementName):
                 messages.append('Count value must be bigger than 0')
     else:
         messages.append("Please add count !")
+# =========================================
+def validateHashtags(request):
+    global messages
+    hashtagsWithNull = []
+    hashtags = []
+
+    if (request.POST['addHashtags'].find(',') != -1):
+        allHashtags = request.POST['addHashtags'].strip().split(',')
+        for hashtag in allHashtags:
+            hashtagsWithNull.append(hashtag.strip().replace('\n',"").replace('\r',"").replace('\t',"").replace(' ',"").strip())
+        
+        for i in len(hashtagsWithNull):
+            if '' in hashtagsWithNull[i] :
+                hashtagsWithNull[i].remove()
+
+        hashtags = hashtagsWithNull
+
+    else:
+        hashtags = request.POST['addHashtags'].strip().replace('\n',"").replace('\r',"").replace('\t',"").strip()
+    messages.append(hashtags)
+# =========================================
+# =========================================
+# =========================================
+# =========================================
 # =========================================
