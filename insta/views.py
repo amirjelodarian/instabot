@@ -175,7 +175,7 @@ def doLikeOrFollowByHashtags(request,hashtags):
         driver.find_element_by_class_name('_9AhH0').click() # click first post
         sleep(8)
 
-        for i in range(4): 
+        for i in range(6): 
             like(driver)
 
 
@@ -189,15 +189,11 @@ def doLikeOrFollowByHashtags(request,hashtags):
 
 
 def like(driver):
-    try:
-        postIsUnLiked = driver.find_element_by_xpath("//svg[@class, '_8-yf5 ']")
-        if(postIsUnLiked.get_attribute('aria-label') == "Like"):    
-            sleep(5)
-            postIsUnLiked.click()
-    except:
-        sleep(5)
-    
-    
+    likePath = driver.find_element_by_xpath("//*[contains(@class, 'fr66n')]/button/div/*[*[local-name()='svg']/@aria-label='Like']/*")
+    if len(likePath) == 1 :
+        driver.find_element_by_class_name("fr66n").click() # like post 
+        sleep(5)    
+        
     #next post
     driver.find_element_by_xpath("//div[contains(@class, ' l8mY4 ')]").click()
 
