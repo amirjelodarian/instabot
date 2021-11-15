@@ -1,3 +1,4 @@
+import sys
 from os import remove, stat
 import re
 from typing import Match
@@ -11,7 +12,10 @@ from selenium.webdriver.firefox.webdriver import basestring
 from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
 from django.templatetags.static import static
+import random
+from re import findall
 
+from bot.libray.xpath import read_xpath
 
 
 # Create your views here.
@@ -175,8 +179,7 @@ def doLikeOrFollowByHashtags(request,hashtags):
         driver.find_element_by_class_name('_9AhH0').click() # click first post
         sleep(8)
 
-        for i in range(6): 
-            like(driver)
+        like(driver,4)
 
 
         if(type(hashtags) == str):
@@ -188,15 +191,32 @@ def doLikeOrFollowByHashtags(request,hashtags):
     sleep(60*60*4)
 
 
-def like(driver):
-    likePath = driver.find_element_by_xpath("//*[contains(@class, 'fr66n')]/button/div/*[*[local-name()='svg']/@aria-label='Like']/*")
-    if len(likePath) == 1 :
-        driver.find_element_by_class_name("fr66n").click() # like post 
-        sleep(5)    
-        
-    #next post
-    driver.find_element_by_xpath("//div[contains(@class, ' l8mY4 ')]").click()
+def like(driver,count):
+    
+    #likePath = driver.find_element_by_xpath("//*[contains(@class, 'fr66n')]/button/div/*[*[local-name()='svg']/@aria-label='Like']/*")
+    #if len(likePath) == 1 :
+    #    driver.find_element_by_class_name("fr66n").click() # like post 
+    #    sleep(5)    
 
+    #next post
+    #driver.find_element_by_xpath("//div[contains(@class, ' l8mY4 ')]").click()
+    for i in range(count):
+        sleep(random.randint(5,8))
+        like_xpath = "//*[contains(@class, 'fr66n')]/button/div/*[*[local-name()='svg']/@aria-label='Like']/*"
+        unlike_xpath = "//*[contains(@class, 'fr66n')]/button/div/*[*[local-name()='svg']/@aria-label='Unlike']/*"
+        like_elem = driver.find_elements_by_xpath(like_xpath)
+        if len(like_elem) == 1:
+        # sleep real quick right before clicking the element
+            sleep(2)
+            like_elem = driver.find_elements_by_xpath(like_xpath)
+        if len(like_elem) > 0:
+            click_element(driver, like_elem[0])
+        # check now we have unlike instead of like
+        liked_elem = driver.find_elements_by_xpath(unlike_xpath)
+        #next post
+        driver.find_element_by_xpath("//div[contains(@class, ' l8mY4 ')]").click()
+            
+  
 def checkStrOrList(val1,val2):
     if(type(val1) == str):
         return val1
@@ -213,3 +233,66 @@ def login(request):
     sleep(7)
     driver.find_element_by_xpath("/html/body/div[1]/section/main/div/div/div/div/button").click()
     return driver
+
+
+def click_element(driver, element, tryNum=0):
+
+    try:
+        # use Selenium's built in click function
+        element.click()
+
+
+    except Exception:
+        # click attempt failed
+        # try something funky and try again
+
+        if tryNum == 0:
+            # try scrolling the element into view
+            try:
+                # This tends to fail because the script fails to get the element class
+                if element.get_attribute("class") != "":
+                    driver.execute_script(
+                        "document.getElementsByClassName('"
+                        + element.get_attribute("class")
+                        + "')[0].scrollIntoView({ inline: 'center' });"
+                    )
+            except Exception:
+                pass
+
+        elif tryNum == 1:
+            # well, that didn't work, try scrolling to the top and then
+            # clicking again
+            driver.execute_script("window.scrollTo(0,0);")
+
+        elif tryNum == 2:
+            # that didn't work either, try scrolling to the bottom and then
+            # clicking again
+            driver.execute_script("window.scrollTo(0,document.body.scrollHeight);")
+
+        else:
+            # try `execute_script` as a last resort
+            # print("attempting last ditch effort for click, `execute_script`")
+            try:
+                if element.get_attribute("class") != "":
+                    driver.execute_script(
+                        "document.getElementsByClassName('"
+                        + element.get_attribute("class")
+                        + "')[0].click()"
+                    )
+                    # update server calls after last click attempt by JS
+            except Exception:
+                messages.append("Failed to click an element, giving up now")
+
+            # end condition for the recursive function
+            return
+
+        # update server calls after the scroll(s) in 0, 1 and 2 attempts
+
+        # sleep for 1 second to allow window to adjust (may or may not be
+        # needed)
+        sleep_actual(1)
+
+        tryNum += 1
+
+        # try again!
+        click_element(driver, element, tryNum)
