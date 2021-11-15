@@ -167,10 +167,8 @@ def doLikeOrFollowByHashtags(request,hashtags):
     # divid count between tags or ids sort list have one item or more
     # for count of like each tag
 
-    #if(type(hashtags) == str):
-    #    count = int(request.POST['countLikeOrFollow'])
-    #else:
-    #    count = (int(request.POST['countLikeOrFollow'])) / int(len(hashtags))
+    
+    count = calCount(request.POST['countLikeOrFollow'],hashtags)
 
     for hashtag in hashtags:
         # now bot is in hashtag
@@ -179,8 +177,7 @@ def doLikeOrFollowByHashtags(request,hashtags):
         driver.find_element_by_class_name('_9AhH0').click() # click first post
         sleep(8)
 
-        like(driver,4)
-
+        like(driver,count)
 
         if(type(hashtags) == str):
             break
@@ -201,7 +198,7 @@ def like(driver,count):
     #next post
     #driver.find_element_by_xpath("//div[contains(@class, ' l8mY4 ')]").click()
     for i in range(count):
-        sleep(random.randint(5,8))
+        sleep(random.randint(8,13))
         like_xpath = "//*[contains(@class, 'fr66n')]/button/div/*[*[local-name()='svg']/@aria-label='Like']/*"
         unlike_xpath = "//*[contains(@class, 'fr66n')]/button/div/*[*[local-name()='svg']/@aria-label='Unlike']/*"
         like_elem = driver.find_elements_by_xpath(like_xpath)
@@ -216,7 +213,13 @@ def like(driver,count):
         #next post
         driver.find_element_by_xpath("//div[contains(@class, ' l8mY4 ')]").click()
             
-  
+def calCount(count,items):
+    if(type(items) == str):
+        count = int(count)
+    else:
+        count = (int(count)) / int(len(items))
+    return int(count)
+
 def checkStrOrList(val1,val2):
     if(type(val1) == str):
         return val1
