@@ -189,6 +189,19 @@ def likeOrFollow(driver,count,likeTag,followTag):
     for i in range(count):
         sleep(random.randint(8,13))
 
+        if(followTag == True):
+            # do follow
+            try:
+                # this is for scrolling
+                #driver.execute_script('document.getElementsByClassName("bY2yH")[0].scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});')
+                #sleep(2)
+                followOrFollowing = driver.execute_script('return document.querySelector(".bY2yH button.sqdOP.yWX7d.y3zKF").textContent;')
+                if  followOrFollowing == 'Follow':
+                    driver.find_element_by_xpath("/html/body/div[5]/div[2]/div/article/div/div[2]/div/div/div[1]/div/header/div[2]/div[1]/div[2]/button").click()
+            except:
+                pass
+
+
         if(likeTag == True):
             #do like
             like_xpath = read_xpath('like_image','like')
@@ -203,15 +216,6 @@ def likeOrFollow(driver,count,likeTag,followTag):
             # check now we have unlike instead of like
             liked_elem = driver.find_elements_by_xpath(unlike_xpath)
             sleep(2)
-            
-        if(followTag == True):
-            # do follow
-            try:
-                notFollowed = driver.execute_script('return document.querySelector(".bY2yH button.sqdOP.yWX7d.y3zKF").textContent;')
-                if  notFollowed == 'Follow':
-                    driver.find_element_by_xpath("/html/body/div[5]/div[2]/div/article/div/div[2]/div/div/div[1]/div/header/div[2]/div[1]/div[2]/button").click()        
-            except:
-                pass
 
         #next post
         driver.find_element_by_xpath("//div[contains(@class, ' l8mY4 ')]").click()
@@ -232,7 +236,6 @@ def checkStrOrList(val1,val2):
 def login(request):
     driver = webdriver.Chrome('bot/chromedriver')
     driver.get('https://www.instagram.com/')
-
     driver.find_element_by_name("username").send_keys(request.POST['username'])
     driver.find_element_by_name("password").send_keys(request.POST['password'])
     driver.find_element_by_xpath("//button[@type='submit']").click()
