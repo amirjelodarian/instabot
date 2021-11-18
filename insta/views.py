@@ -14,7 +14,7 @@ from time import sleep
 from django.templatetags.static import static
 import random
 from re import findall
-
+from django.http import HttpResponse
 from bot.libray.xpath import read_xpath
 
 
@@ -56,8 +56,8 @@ def validate(request):
                 likeOrFollowAsHashtagsValidate(request)
                 hashtags = validatehashtagOrFollowTextArea(request.POST['addHashtags'],'Hashtags')
                 if(not messages):
-                    doLikeOrFollowByHashtags(request,hashtags)
-                    
+                    message = doLikeOrFollowByHashtags(request,hashtags)
+                 
             elif request.POST['selectOption'] == 'followSuggestionPeople':
                 followSuggestionPeopleValidate(request)
                 userIds = validatehashtagOrFollowTextArea(request.POST['addUserID'],"People ID\'s")
@@ -169,47 +169,50 @@ def doLikeOrFollowByHashtags(request,hashtags):
 
     
     count = calCount(request.POST['countLikeOrFollow'],hashtags)
-
     for hashtag in hashtags:
         # now bot is in hashtag
         driver.get('https://www.instagram.com/explore/tags/%s' % checkStrOrList(hashtags,hashtag))
         sleep(5)
         driver.find_element_by_class_name('_9AhH0').click() # click first post
-        sleep(8)
-
-        like(driver,count)
-
+        sleep(random.randint(7,15))
+        likeOrFollow(driver,count,likeTag,followTag)
         if(type(hashtags) == str):
             break
         else:
             continue
-        
+    sleep(60 * 5)
+            
 
-    sleep(60*60*4)
-
-
-def like(driver,count):
-    
-    #likePath = driver.find_element_by_xpath("//*[contains(@class, 'fr66n')]/button/div/*[*[local-name()='svg']/@aria-label='Like']/*")
-    #if len(likePath) == 1 :
-    #    driver.find_element_by_class_name("fr66n").click() # like post 
-    #    sleep(5)    
-
+def likeOrFollow(driver,count,likeTag,followTag):
     #next post
     #driver.find_element_by_xpath("//div[contains(@class, ' l8mY4 ')]").click()
     for i in range(count):
         sleep(random.randint(8,13))
-        like_xpath = "//*[contains(@class, 'fr66n')]/button/div/*[*[local-name()='svg']/@aria-label='Like']/*"
-        unlike_xpath = "//*[contains(@class, 'fr66n')]/button/div/*[*[local-name()='svg']/@aria-label='Unlike']/*"
-        like_elem = driver.find_elements_by_xpath(like_xpath)
-        if len(like_elem) == 1:
-        # sleep real quick right before clicking the element
-            sleep(2)
+
+        if(likeTag == True):
+            #do like
+            like_xpath = read_xpath('like_image','like')
+            unlike_xpath = read_xpath('like_image','unlike')
             like_elem = driver.find_elements_by_xpath(like_xpath)
-        if len(like_elem) > 0:
-            click_element(driver, like_elem[0])
-        # check now we have unlike instead of like
-        liked_elem = driver.find_elements_by_xpath(unlike_xpath)
+            if len(like_elem) == 1:
+            # sleep real quick right before clicking the element
+                sleep(2)
+                like_elem = driver.find_elements_by_xpath(like_xpath)
+            if len(like_elem) > 0:
+                click_element(driver, like_elem[0])
+            # check now we have unlike instead of like
+            liked_elem = driver.find_elements_by_xpath(unlike_xpath)
+            sleep(2)
+            
+        if(followTag == True):
+            # do follow
+            try:
+                notFollowed = driver.execute_script('return document.querySelector(".bY2yH button.sqdOP.yWX7d.y3zKF").textContent;')
+                if  notFollowed == 'Follow':
+                    driver.find_element_by_xpath("/html/body/div[5]/div[2]/div/article/div/div[2]/div/div/div[1]/div/header/div[2]/div[1]/div[2]/button").click()        
+            except:
+                pass
+
         #next post
         driver.find_element_by_xpath("//div[contains(@class, ' l8mY4 ')]").click()
             
@@ -293,7 +296,7 @@ def click_element(driver, element, tryNum=0):
 
         # sleep for 1 second to allow window to adjust (may or may not be
         # needed)
-        sleep_actual(1)
+        sleep(1)
 
         tryNum += 1
 
