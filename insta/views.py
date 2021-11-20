@@ -9,7 +9,6 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.firefox.webdriver import basestring
-from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
 from django.templatetags.static import static
 import random
