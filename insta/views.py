@@ -172,7 +172,7 @@ def doLikeOrFollowByHashtags(request,hashtags):
         # now bot is in hashtag
         driver.get('https://www.instagram.com/explore/tags/%s' % checkStrOrList(hashtags,hashtag))
         sleep(5)
-        driver.find_element_by_class_name('_9AhH0').click() # click first post
+        driver.find_element_by_class_name(read_xpath('post_in_hashtags','first_post')).click() # click first post
         sleep(random.randint(7,15))
         likeOrFollow(driver,count,likeTag,followTag)
         if(type(hashtags) == str):
@@ -196,7 +196,7 @@ def likeOrFollow(driver,count,likeTag,followTag):
                 #sleep(2)
                 followOrFollowing = driver.execute_script('return document.querySelector(".bY2yH button.sqdOP.yWX7d.y3zKF").textContent;')
                 if  followOrFollowing == 'Follow':
-                    driver.find_element_by_xpath("/html/body/div[5]/div[2]/div/article/div/div[2]/div/div/div[1]/div/header/div[2]/div[1]/div[2]/button").click()
+                    driver.find_element_by_xpath(read_xpath('follow_post_by_hashtags','follow')).click()
             except:
                 pass
 
@@ -217,7 +217,7 @@ def likeOrFollow(driver,count,likeTag,followTag):
             sleep(2)
 
         #next post
-        driver.find_element_by_xpath("//div[contains(@class, ' l8mY4 ')]").click()
+        driver.find_element_by_xpath(read_xpath('post_in_hashtags','next_post')).click()
             
 def calCount(count,items):
     if(type(items) == str):
@@ -239,7 +239,7 @@ def login(request):
     driver.find_element_by_name("password").send_keys(request.POST['password'])
     driver.find_element_by_xpath("//button[@type='submit']").click()
     sleep(7)
-    driver.find_element_by_xpath("/html/body/div[1]/section/main/div/div/div/div/button").click()
+    driver.find_element_by_xpath(read_xpath('dismiss_get_app_offer','not_now')).click()
     return driver
 
 

@@ -39,6 +39,7 @@ xpath["dialog_username_extractor"] = {"person": "../../*"}
 xpath["dismiss_get_app_offer"] = {
     "offer_elem": "//*[contains(text(), 'Get App')]",
     "dismiss_elem": "//*[contains(text(), 'Not Now')]",
+    "not_now": "/html/body/div[1]/section/main/div/div/div/div/button",
 }
 
 xpath["dismiss_notification_offer"] = {
@@ -78,8 +79,12 @@ xpath["get_buttons_from_dialog"] = {
     "follow_button": "//button[text()='Follow']",
     "unfollow_button": "//button[text() = 'Following']",
 }
-xpath['get_follow_when_like_post_by_hashtags'] = {
+xpath['follow_post_by_hashtags'] = {
     "follow": "/html/body/div[5]/div[2]/div/article/div/div[2]/div/div/div[1]/div/header/div[2]/div[1]/div[2]/button"
+}
+xpath['post_in_hashtags'] = {
+    "next_post": "//div[contains(@class, ' l8mY4 ')]",
+    "first_post": "_9AhH0",
 }
 xpath["get_comment_input"] = {
     "comment_input": "//form/textarea",
